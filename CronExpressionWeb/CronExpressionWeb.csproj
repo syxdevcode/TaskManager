@@ -70,17 +70,17 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Cron\cron.js" />
-    <Content Include="Cron\icon.css" />
-    <Content Include="Cron\jquery-1.6.2.min.js" />
-    <Content Include="Cron\jquery.easyui.js" />
-    <Content Include="Cron\jquery.easyui.min.js" />
-    <Content Include="Cron\themes\bootstrap\easyui.css" />
-    <Content Include="Cron\themes\bootstrap\images\panel_tools.png" />
-    <Content Include="Cron\themes\bootstrap\images\spinner_arrows.png" />
-    <Content Include="Cron\themes\bootstrap\images\tabs_icons.png" />
-    <Content Include="Cron\themes\bootstrap\easyui.min.css" />
-    <Content Include="Cron\themes\icon.css" />
+    <Content Include="Css\cron.js" />
+    <Content Include="Css\icon.css" />
+    <Content Include="Css\jquery-1.6.2.min.js" />
+    <Content Include="Css\jquery.easyui.js" />
+    <Content Include="Css\jquery.easyui.min.js" />
+    <Content Include="Css\themes\bootstrap\easyui.css" />
+    <Content Include="Css\themes\bootstrap\easyui.min.css" />
+    <Content Include="Css\themes\bootstrap\images\panel_tools.png" />
+    <Content Include="Css\themes\bootstrap\images\spinner_arrows.png" />
+    <Content Include="Css\themes\bootstrap\images\tabs_icons.png" />
+    <Content Include="Css\themes\icon.css" />
     <Content Include="index.htm" />
     <Content Include="Web.config" />
   </ItemGroup>
