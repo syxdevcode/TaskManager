@@ -28,7 +28,7 @@ namespace Ywdsoft.Utility.Quartz
 
 
         /// <summary>
-        ///  //Trigger触发后，job执行时调用本方法。true即否决，job后面不执行。
+        /// Trigger触发后，job执行时调用本方法。true即否决，job后面不执行。
         /// </summary>
         /// <param name="trigger"></param>
         /// <param name="context"></param>
