@@ -35,7 +35,7 @@ namespace Ywdsoft.Utility
                 {
                     throw ex;
                 }
-                System.Environment.Exit(0);
+                //System.Environment.Exit(0);
             }
         }
     }
