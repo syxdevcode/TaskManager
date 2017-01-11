@@ -76,6 +76,7 @@
     <Compile Include="TaskSet\AutoRunJob.cs" />
     <Compile Include="Utils\ExpressUtil.cs" />
     <Compile Include="Utils\IpProxyGet.cs" />
+    <Compile Include="Utils\IpProxyGet1.cs" />
     <Compile Include="Utils\TaskLog.cs" />
   </ItemGroup>
   <ItemGroup>

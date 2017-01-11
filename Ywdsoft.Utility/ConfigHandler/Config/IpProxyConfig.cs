@@ -13,7 +13,8 @@ namespace Ywdsoft.Utility.ConfigHandler
         /// <summary>
         /// 提取代理ip站点地址
         /// </summary>
-        [Config(Name = "提取代理IP站点", DefaultValue = "http://www.xicidaili.com/nn")]
+        //[Config(Name = "提取代理IP站点", DefaultValue = "http://www.xicidaili.com/nn")]
+        [Config(Name = "提取代理IP站点", DefaultValue = "http://www.kuaidaili.com/free/inha")]
         public static string IPUrl { get; set; }
 
         /// <summary>

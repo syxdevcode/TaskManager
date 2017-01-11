@@ -53,7 +53,9 @@ namespace Ywdsoft.Task.TaskSet
                 }
                 TaskLog.IpProxyLogInfo.WriteLogE("\r\n\r\n\r\n\r\n------------------任务使用的代理ip:" + ProxyIp + "----------------------------\r\n\r\n");
 
-                List<IPProxy> list = IpProxyGet.ParseProxy(ProxyIp);
+                // 改用IpProxyGet1
+                //List<IPProxy> list = IpProxyGet.ParseProxy(ProxyIp);
+                List<IPProxy> list = IpProxyGet1.ParseProxy(ProxyIp);
                 if (list.Count == 0)
                 {
                     //没有返回数据.表示当前IP已经被锁定需要更换

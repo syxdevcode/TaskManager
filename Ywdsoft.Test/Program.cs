@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using Ywdsoft.Utility.Mef;
 using Ywdsoft.Utility.ConfigHandler;
+using System.Net.NetworkInformation;
 
 namespace Ywdsoft.Test
 {
@@ -50,15 +51,70 @@ namespace Ywdsoft.Test
             }
 
 
-
+            //GetProxyIpList();
             //ParseExpressCode();
             //ExpressUtil.HandleProecssInfo("");
             //MessageHelper.SendMessage(new Guid("6282AA73-2A58-E511-8D70-00155D0C740D"));
             //new Ywdsoft.Task.TaskSet.SendMessageJob().Execute(null);
+
             Console.Read();
         }
 
+        /*
+        public static void GetProxyIpList()
+        {
+            IPProxy item = null;
+            HtmlNodeCollection nodes = null;
+            HtmlNode node = null;
+            HtmlAttribute atr = null;
 
+            var url = string.Format("{0}/{1}", IpProxyConfig.IPUrl, 1);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(GetHTML(url, ""));
+            //获取所有数据节点tr
+            var trs = doc.DocumentNode.SelectNodes(@"//table[@class='table table-bordered table-striped']/tbody/tr");
+            if (trs != null && trs.Count > 1)
+            {
+                for (int j = 1; j < trs.Count; j++)
+                {
+                    nodes = trs[j].SelectNodes("td");
+                    if (nodes != null)
+                    {
+                        var ip = nodes[0].InnerText.Trim();
+                        if (IpProxyConfig.IsPingIp && !Ping(ip))
+                        {
+                            continue;
+                        }
+                        //有效的IP才添加
+                        item = new IPProxy();
+
+                        item.IP = ip;
+                        item.Port = nodes[1].InnerText.Trim();
+                        item.Anonymity = nodes[2].InnerText.Trim();
+                        item.ProxyIp = string.Format("{0}:{1}", item.IP, item.Port);
+                        item.Position = nodes[4].InnerText.Trim();
+                        item.Type = nodes[3].InnerText.Trim();
+                        item.Speed = nodes[5].InnerText.Trim();
+                        item.VerifyTime = nodes[6].InnerText.Trim();
+
+                    }
+                }
+            }
+        }
+        */
+
+        /// <summary>  
+        /// 是否能 Ping 通指定的主机  
+        /// </summary>  
+        /// <param name="ip">ip 地址或主机名或域名</param>  
+        /// <returns>true 通，false 不通</returns>  
+        private static bool Ping(string ip)
+        {
+            Ping p = new Ping();
+            int timeout = 1000;
+            PingReply reply = p.Send(ip, timeout);
+            return reply.Status == System.Net.NetworkInformation.IPStatus.Success;
+        }
 
         /// <summary>
         /// 代理使用示例
@@ -72,9 +128,12 @@ namespace Ywdsoft.Test
             {
                 var request = (HttpWebRequest)WebRequest.Create(Url);
                 request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
-                WebProxy myProxy = new WebProxy("192.168.15.11", 8015);
+                //WebProxy myProxy = new WebProxy("192.168.15.11", 8015);
+                WebProxy myProxy = new WebProxy("115.154.138.79", 808);
+
                 //建议连接（代理需要身份认证，才需要用户名密码）
-                myProxy.Credentials = new NetworkCredential("admin", "123456");
+                //myProxy.Credentials = new NetworkCredential("admin", "123456");
+
                 //设置请求使用代理信息
                 request.Proxy = myProxy;
                 // Get the response instance.
