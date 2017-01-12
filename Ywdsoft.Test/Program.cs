@@ -11,6 +11,9 @@ using System.Text;
 using Ywdsoft.Utility.Mef;
 using Ywdsoft.Utility.ConfigHandler;
 using System.Net.NetworkInformation;
+using System.Web;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Ywdsoft.Test
 {
@@ -18,6 +21,9 @@ namespace Ywdsoft.Test
     {
         static void Main(string[] args)
         {
+            //var str = GetUrltoHtml("http://www.kuaidaili.com/free/inha");
+            var str1 = PostForm("http://www.kuaidaili.com/free/inha");
+
             AdminRun.Run();
             //1.MEF初始化
             MefConfig.Init();
@@ -49,7 +55,6 @@ namespace Ywdsoft.Test
             {
                 Console.WriteLine(ex.Message);
             }
-
 
             //GetProxyIpList();
             //ParseExpressCode();
@@ -117,6 +122,89 @@ namespace Ywdsoft.Test
         }
 
         /// <summary>
+        /// 支持请求启用cookie
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="form"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static string PostForm(string url, string type = "UTF-8")
+        {
+            string resultPage = string.Empty;
+            try
+            {
+                CookieContainer cookies = new CookieContainer();
+                string postStr = "";
+                byte[] postData = Encoding.ASCII.GetBytes(postStr);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                //禁止重定向
+                request.AllowAutoRedirect = false;
+                request.ContentType = "application/x-www-form-urlencoded;charset=gbk";
+                request.CookieContainer = new CookieContainer();
+                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
+
+                var arr = "122.224.109.109:80".Split(':');
+                if (arr.Length < 2)
+                    return "ip格式错误";
+                WebProxy myProxy = new WebProxy(arr[0].ToString(), Convert.ToInt32(arr[1]));
+                request.Timeout = 5000;
+                request.KeepAlive = false;
+                request.ProtocolVersion = HttpVersion.Version10;
+                //设置请求使用代理信息
+                //request.Proxy = myProxy;
+
+                Stream requestStream = request.GetRequestStream();
+                requestStream.Write(postData, 0, postData.Length);
+                requestStream.Close();
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, Encoding.GetEncoding(type)))
+                {
+                    resultPage = reader.ReadToEnd();
+                }
+
+                string cookie = response.Headers.Get("Set-Cookie");
+                //string html = getHtml(GetCookieName(cookie), GetCookieValue(cookie));
+                responseStream.Close();
+                return resultPage;
+            }
+            catch (Exception ex)
+            {
+                resultPage = ex.Message;
+            }
+            return resultPage;
+        }
+        private static string GetCookieValue(string cookie)
+        {
+            Regex regex = new Regex("=.*?;");
+            Match value = regex.Match(cookie);
+            string cookieValue = value.Groups[0].Value;
+            return cookieValue.Substring(1, cookieValue.Length - 2);
+        }
+
+        private static string GetCookieName(string cookie)
+        {
+            Regex regex = new Regex("sulcmiswebpac.*?");
+            Match value = regex.Match(cookie);
+            return value.Groups[0].Value;
+        }
+
+        private static string getHtml(string name, string value)
+        {
+            CookieCollection cookies = new CookieCollection();
+            cookies.Add(new Cookie(name, value));
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://222.200.98.171:81/user/bookborrowed.aspx");
+            request.Method = "GET";
+            request.Headers.Add("Cookie", name + "=" + value);
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream stream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            return reader.ReadToEnd();
+        }
+        /// <summary>
         /// 代理使用示例
         /// </summary>
         /// <param name="Url"></param>
@@ -126,11 +214,15 @@ namespace Ywdsoft.Test
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(Url);
+                //CookieContainer myCookieContainer = GetCookies();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
                 request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+                request.Method = "Get";
                 //WebProxy myProxy = new WebProxy("192.168.15.11", 8015);
-                WebProxy myProxy = new WebProxy("115.154.138.79", 808);
-
+                WebProxy myProxy = new WebProxy("122.224.109.109", 80);
+                request.Timeout = 5000;
+                request.KeepAlive = false;
+                request.ProtocolVersion = HttpVersion.Version10;
                 //建议连接（代理需要身份认证，才需要用户名密码）
                 //myProxy.Credentials = new NetworkCredential("admin", "123456");
 
@@ -145,14 +237,27 @@ namespace Ywdsoft.Test
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //errorMsg = ex.Message;
             }
             return "";
         }
 
+        //private static CookieContainer GetCookies()
+        //{
+        //    CookieContainer myCookieContainer = new CookieContainer();
 
+        //    HttpCookie requestCookie;
+        //    int requestCookiesCount = System.Web.HttpRequest.Cookies.Count;
+        //    for (int i = 0; i < requestCookiesCount; i++)
+        //    {
+        //        requestCookie = System.Web.HttpContext.Current.Request.Cookies[i];
+        //        Cookie clientCookie = new Cookie(requestCookie.Name, requestCookie.Value, requestCookie.Path, requestCookie.Domain == null ? System.Web.HttpContext.Current.Request.Url.Host : requestCookie.Domain);
+        //        myCookieContainer.Add(clientCookie);
+        //    }
+        //    return myCookieContainer;
+        //}
 
         /// <summary>
         /// 获取快递公司列表

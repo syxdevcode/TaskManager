@@ -11,6 +11,7 @@ using System.Threading;
 using Ywdsoft.Utility.ConfigHandler;
 using System.Net;
 using System.Text;
+using System.IO;
 
 namespace Ywdsoft.Task.Utils
 {
@@ -186,34 +187,53 @@ namespace Ywdsoft.Task.Utils
         /// <param name="Url"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetUrltoHtml(string Url, string ip, string type = "UTF-8")
+        public static string GetUrltoHtml(string url, string ip,string type = "UTF-8")
         {
+            string resultPage = string.Empty;
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(Url);
-                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2907.0 Safari/537.36";
-                //WebProxy myProxy = new WebProxy("192.168.15.11", 8015);
-                WebProxy myProxy = new WebProxy("121.31.49.79", 8123);
-
-                //建议连接（代理需要身份认证，才需要用户名密码）
-                //myProxy.Credentials = new NetworkCredential("admin", "123456");
-
-                //设置请求使用代理信息
-                request.Proxy = myProxy;
-                // Get the response instance.
-                System.Net.WebResponse wResp = request.GetResponse();
-                System.IO.Stream respStream = wResp.GetResponseStream();
-                // Dim reader As StreamReader = New StreamReader(respStream)
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(respStream, Encoding.GetEncoding(type)))
+                string postStr = "";
+                byte[] postData = Encoding.ASCII.GetBytes(postStr);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                //禁止重定向
+                request.AllowAutoRedirect = false;
+                request.ContentType = "application/x-www-form-urlencoded;charset=gbk";
+                request.CookieContainer = new CookieContainer();
+                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
+                if (!string.IsNullOrEmpty(ip))
                 {
-                    return reader.ReadToEnd();
+                    var arr = ip.Split(':');
+                    if (arr.Length < 2)
+                        return "ip格式错误";
+                    WebProxy myProxy = new WebProxy(arr[0].ToString(), Convert.ToInt32(arr[1]));
+                    //设置请求使用代理信息
+                    request.Proxy = myProxy;
                 }
+                request.Timeout = 5000;
+                request.KeepAlive = false;
+                request.ProtocolVersion = HttpVersion.Version10;
+                Stream requestStream = request.GetRequestStream();
+                requestStream.Write(postData, 0, postData.Length);
+                requestStream.Close();
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, Encoding.GetEncoding(type)))
+                {
+                    resultPage = reader.ReadToEnd();
+                }
+
+                string cookie = response.Headers.Get("Set-Cookie");
+                //string html = getHtml(GetCookieName(cookie), GetCookieValue(cookie));
+                responseStream.Close();
+                return resultPage;
             }
             catch (Exception ex)
             {
-                //errorMsg = ex.Message;
+                resultPage = ex.Message;
             }
-            return "";
+            return resultPage;
         }
 
         /// <summary>
