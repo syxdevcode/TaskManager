@@ -22,7 +22,7 @@ namespace Ywdsoft.Test
         static void Main(string[] args)
         {
             //var str = GetUrltoHtml("http://www.kuaidaili.com/free/inha");
-            var str1 = PostForm("http://www.kuaidaili.com/free/inha");
+            //var str1 = PostForm("http://www.kuaidaili.com/free/inha");
 
             AdminRun.Run();
             //1.MEF初始化

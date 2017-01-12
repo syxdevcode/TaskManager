@@ -72,17 +72,17 @@ namespace Ywdsoft.Task.Utils
                 count += threadPqgeSize;
             }
 
-            for (int i = 1; i < CPUCount; i++)
-            {
-                Thread thread = new Thread(DoWork);
-                thread.IsBackground = true;
-                thread.Name = "PageParse #" + i.ToString();
-                listThread.Add(thread);
-                thread.Start(threadParams[i]);
-            }
+            //for (int i = 1; i < CPUCount; i++)
+            //{
+            //    Thread thread = new Thread(DoWork);
+            //    thread.IsBackground = true;
+            //    thread.Name = "PageParse #" + i.ToString();
+            //    listThread.Add(thread);
+            //    thread.Start(threadParams[i]);
+            //}
 
             // 为当前线程指派生成任务。
-            DoWork(threadParams[0]);
+             DoWork(threadParams[0]);
 
             // 等待所有的编译线程执行线束。
             foreach (Thread thread in listThread)
@@ -131,7 +131,7 @@ namespace Ywdsoft.Task.Utils
                 if (trs != null && trs.Count > 1)
                 {
                     TaskLog.IpProxyLogInfo.WriteLogE(string.Format("当前页码{0},请求地址{1},共{2}条数据", i, url, trs.Count));
-                    for (int j = 0; j <= trs.Count; j++)
+                    for (int j = 0; j < trs.Count; j++)
                     {
                         nodes = trs[j].SelectNodes("td");
                         if (nodes != null && nodes.Count > 6)
