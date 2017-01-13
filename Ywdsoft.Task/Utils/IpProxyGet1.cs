@@ -72,6 +72,7 @@ namespace Ywdsoft.Task.Utils
                 count += threadPqgeSize;
             }
 
+            // 启用多线程爬取IP ,
             //for (int i = 1; i < CPUCount; i++)
             //{
             //    Thread thread = new Thread(DoWork);
