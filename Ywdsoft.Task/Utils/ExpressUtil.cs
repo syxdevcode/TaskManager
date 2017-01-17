@@ -332,7 +332,7 @@ namespace Ywdsoft.Task.Utils
         {
             string ProxyIp = string.Empty;
             string tempProxyIp = string.Empty;
-            string url = "http://www.kuaidi100.com/query?type=yuantong&postid=880373857190629830&id=1&valicode=&temp=0.7078260387203143";
+            string url = "http://www.kuaidi100.com/query?type=yunda&postid=3802870095141&id=1&valicode=&temp=0.7024221365292822";
             //当前页
             int currentPage = 1;
             int PageSize = 100;
